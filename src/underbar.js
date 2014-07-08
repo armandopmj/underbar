@@ -215,11 +215,23 @@ var _ = {};
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    function join_objs(obj1, obj2){
+      for( var i in obj2) { obj1[ i ] = obj2[i]; };
+      return obj1;
+    }
+    return _.reduce( arguments , join_objs , obj );
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    function join_objs(obj1, obj2){
+      for( var i in obj2) {
+        if( !(i in obj1) ) obj1[ i ] = obj2[i]; 
+      }
+      return obj1;
+    }
+    return _.reduce( arguments , join_objs , obj );
   };
 
 
@@ -261,6 +273,15 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    /*
+    var args_results = {};
+    if( arguments[0] in args_results ) return args_results[ arguments[0] ];
+    else {
+      var result = func.apply(this, arguments[0]);
+      args_results[ arguments[0] ] = result;
+      return result;
+    }
+    */
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -270,6 +291,7 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    setTimeout( func(), wait );
   };
 
 
@@ -284,6 +306,13 @@ var _ = {};
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var i, result = [], indexs = _.map(array, function(x, i){ return i }  );
+    while( indexs.length > 0 ) {
+      i = Math.round(Math.random() * indexs.length);
+      result.push( array[i] );
+      indexs.splice( indexs.indexOf(i), 1 );
+    }
+    return result;
   };
 
 
