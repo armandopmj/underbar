@@ -133,7 +133,11 @@ var _ = {};
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
-    return functionOrKey.apply(Array, collection  );
+    result = [];
+    for( var i = 0; collection.length; i++ ){
+      alert(functionOrKey.apply(null, collection[i].split("")));
+    }
+    return result;
   };
 
   // Reduces an array or object to a single value by repetitively calling
@@ -291,7 +295,12 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-    setTimeout( func(), wait );
+    var args = [];
+    for ( var i = 2; i<arguments.length; i++){
+      args.push( arguments[i] );
+    }
+    function run(){ func.apply( null, args ) };
+    setTimeout( run, wait );
   };
 
 
@@ -306,11 +315,13 @@ var _ = {};
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-    var i, result = [], indexs = _.map(array, function(x, i){ return i }  );
+    var i, result = [], indexs = _.map(array, function(x, i){ return i} );
     while( indexs.length > 0 ) {
-      i = Math.round(Math.random() * indexs.length);
-      result.push( array[i] );
-      indexs.splice( indexs.indexOf(i), 1 );
+      i = Math.floor(Math.random() * array.length);
+      if( _.contains(indexs, i) ){
+        result.push( array[i] );
+        indexs.splice( indexs.indexOf(i), 1 );
+      }
     }
     return result;
   };
