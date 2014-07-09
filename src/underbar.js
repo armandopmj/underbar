@@ -133,9 +133,10 @@ var _ = {};
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
-    result = [];
-    for( var i = 0; collection.length; i++ ){
-      alert(functionOrKey.apply(null, collection[i].split("")));
+    if (typeof functionOrKey === "string") {
+      var result = _.map(collection, function(x){ return x[functionOrKey].apply(x) });
+    } else {
+      var result = _.map(collection, function(x){ return functionOrKey.apply(x) });
     }
     return result;
   };
